@@ -1,14 +1,15 @@
-# 🌊 Liquid Pathfinder: Chemical Maze Solver
+# 🌊 ChemWave Maze Solver — Liquid Pathfinder
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Science](https://img.shields.io/badge/Reference-Science%201995-red.svg)](https://www.science.org/doi/10.1126/science.267.5199.868)
+[![Repo](https://img.shields.io/badge/GitHub-ChemWave--Maze--Solver-black)](https://github.com/Mike-Zhuang/ChemWave-Maze-Solver)
 
 > **"Chemistry is nature's original algorithm."**
 > 
 > **化学是自然界最原始的算法。**
 
-A Digital Twin reproduction of the classic 1995 *Science* paper: *"Navigating Complex Labyrinths: Optimal Paths from Chemical Waves"*.
+A Digital Twin reproduction of the classic 1995 *Science* paper: *"Navigating Complex Labyrinths: Optimal Paths from Chemical Waves"*. Repository: Mike-Zhuang/ChemWave-Maze-Solver.
 
 **数字孪生再现了1995年《科学》杂志的经典论文：** *《穿越复杂迷宫：化学波的最优路径》*。
 
@@ -48,8 +49,8 @@ A Digital Twin reproduction of the classic 1995 *Science* paper: *"Navigating Co
 
 ### 1. Clone the repository / 克隆仓库
 ```bash
-git clone https://github.com/YourUsername/Liquid-Pathfinder.git
-cd Liquid-Pathfinder
+git clone https://github.com/Mike-Zhuang/ChemWave-Maze-Solver.git
+cd ChemWave-Maze-Solver
 ```
 
 ### 2. Install dependencies / 安装依赖
@@ -58,8 +59,8 @@ pip install -r requirements.txt
 ```
 
 ### 3. Run the Digital Twin / 运行数字孪生
-To run the full simulation with the complex 1664 Boeckler Labyrinth:  
-运行复杂的 1664 Boeckler 迷宫的完整模拟：
+To run the full simulation with the complex 1664 Boeckler labyrinth (with CV extraction + interactive backtracking):  
+运行复杂的 1664 Boeckler 迷宫（含图像识别 + 点击回溯寻路）的完整模拟：
 ```bash
 python BZ_Barkley_Maze_Complicated.py
 ```
@@ -71,18 +72,74 @@ python BZ_Barkley_Maze_Complicated.py
 - **Interact:** Click any point on the right screen to reveal the optimal path!  
   **交互：** 点击右屏幕上的任意点以显示最优路径！
 
+### 4. Other demos / 其它演示
+- Barkley base model (two gates demo) / 基础 Barkley 模型（双门演示）
+  ```bash
+  python BZ_Barkley.py
+  ```
+- Hand-crafted maze (START/EXIT labels) / 手工复杂迷宫（带起终点标注）
+  ```bash
+  python BZ_Barkley_Maze.py
+  ```
+- Gray-Scott pattern formation / Gray-Scott 图灵花纹
+  ```bash
+  python BZ_Gray-Scott.py
+  ```
+
 ---
 
 ## 📂 File Structure / 文件结构
 
 - **BZ_Barkley_Maze_Complicated.py:** The advanced "Digital Twin" version. Includes CV maze extraction, dual-screen visualization, and interactive click-to-solve pathfinding.  
   **高级版：** 包含 CV 迷宫提取、双屏可视化和交互式点击求解路径。
+- **BZ_Barkley.py:** A minimal Barkley excitable-media demo with a wall and two gates, good for learning the core dynamics before moving to full mazes.  
+  **入门版：** 带“横墙 + 双门”的最小 Barkley 演示，适合先理解波传播与墙体吸收的核心机制。
 - **BZ_Barkley_Maze.py:** A simplified version with a manually constructed U-trap maze, good for understanding the basic mechanism.  
   **简化版：** 包含手动构建的 U 型迷宫，适合理解基本机制。
 - **BZ_Gray-Scott.py:** A fundamental demo of the Gray-Scott model, showcasing Turing patterns and self-catalysis ($U+2V \to 3V$).  
   **基础演示：** 展示 Gray-Scott 模型的图灵模式和自催化反应。
 - **3.jpg:** The original maze image from the 1664 Boeckler design (and the 1995 Science paper).  
   **原始迷宫图：** 来自 1664 年 Boeckler 设计（以及 1995 年《科学》论文）。
+
+> Note / 说明：`BZ_Barkley_Maze_Complicated.py` 默认读取 `3.jpg`（黑色为墙、白色为通道）。若缺失或读取失败，脚本会自动降级为内置备用迷宫，不会中断演示。
+
+---
+
+## ⚙️ Environment & Dependencies / 环境与依赖
+
+- Python ≥ 3.8
+- Packages: `numpy`, `matplotlib`, `opencv-python`（见 `requirements.txt`）
+
+Optional tips / 建议：
+- macOS 上若遇到 `matplotlib` 后端问题，可尝试：
+  ```bash
+  export MPLBACKEND=MacOSX
+  ```
+- OpenCV 读取迷宫的阈值目前在代码中固定为 `100`。对于不同风格的迷宫图，可在 `BZ_Barkley_Maze_Complicated.py` 中调整：
+  ```python
+  _, binary = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY)
+  ```
+  以获得更理想的二值化效果。
+
+---
+
+## 🧪 Parameters You Can Tweak / 可调参数
+
+In Barkley-based scripts（`BZ_Barkley*.py`）you can tune:
+- `epsilon`, `D`, `dt`: affect wave thickness, speed and stability.
+- `steps_per_frame`: trade-off between visual smoothness and simulation speed.
+- `sim_size` / `size`: resolution of the simulation grid.
+
+在 Barkley 系脚本中可调整：
+- `epsilon`、`D`、`dt`：影响波的厚度、速度与稳定性；
+- `steps_per_frame`：在“流畅度”和“速度”之间折中；
+- `sim_size` / `size`：模拟网格分辨率（越大越耗时）。
+
+For the Digital Twin (`BZ_Barkley_Maze_Complicated.py`):
+- Replace `3.jpg` with your own maze image, or modify `img_path` 指向你的图片路径；
+- Ensure “walls = black, paths = white” for best results.
+
+---
 
 ---
 
@@ -116,13 +173,17 @@ By tracing back from the destination to the source along the steepest descent of
 
 ---
 
-## 📸 Screenshots / 截图
+## 🧰 Troubleshooting / 故障排查
 
-- **Live Wave Propagation / 实时波传播**
-- **Interactive Pathfinding / 交互式路径查找**
+- "找不到 3.jpg" 或图像提取效果差：
+  - 程序会自动使用备用迷宫继续演示；
+  - 调整 OpenCV 二值化阈值（见上文）；
+  - 请确保迷宫图片为“黑墙白路”。
+- 窗口卡顿或帧率低：
+  - 降低分辨率（`sim_size`/`size`），或减少 `steps_per_frame`；
+  - 关闭其他高负载任务。
 
-*(Run the code and click to see the Magenta Path!)*  
-*(运行代码并点击查看洋红色路径！)*
+---
 
 ---
 
@@ -141,3 +202,16 @@ Zhuang Chengbo (Mike)
 庄程博（Mike）  
 Future Technology Programme, Guohao College  
 同济大学国豪学院未来技术班
+
+---
+
+## 🗂️ Repo Hygiene / 仓库规范
+
+This repo ignores editor settings and OS artifacts to keep commits clean:
+
+```
+.vscode/
+.DS_Store
+```
+
+除此之外，资源文件（如 `3.jpg`）与源码一并纳入版本管理，便于复现实验与演示。
